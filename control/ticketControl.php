@@ -24,6 +24,25 @@
             }
             return $tickets_arr;
         }
+		
+		function findByAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
+
+            $mongo = Conexao::getInstance();
+            $ticket = new Ticket($mongo);
+
+            $rows = $ticket->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
+
+            //Array tickets
+            $tickets_arr = $this->getTicketsArray($rows);
+
+            //Retorna resultados da pag 1
+            if(!$tickets_arr) {
+                $rows = $ticket->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, 1, 10);
+                $tickets_arr = $this->getTicketsArray($rows);
+            }
+
+            echo json_encode($tickets_arr);
+        }
 
         function findAll() {
 
