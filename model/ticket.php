@@ -64,4 +64,28 @@
 
             return $filter;      
         }
+		
+		//Realiza consulta com filtros, ordem e paginação
+		function findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
+
+            $sort = ['sort' => [ "DateCreate" => 1]];
+            if($order) {
+                $sort = ['sort' => [ "$order" => 1]];
+            }
+
+            $sort = $this->pagination($sort, $pageSize, $page);
+            
+            $filter = array();
+            if($filterStartDt) {
+                $filter = $this->filterByDateCreateBetween($filterStartDt, $filterEndDt);
+            }
+            if($filterPriority){
+                $filter['Priority'] = $filterPriority;
+            }          
+
+            $query = new MongoDB\Driver\Query($filter, $sort);
+            $rows = $this->mongo->executeQuery("projeto.tickets", $query);
+
+            return $rows;
+        }
 ?>
