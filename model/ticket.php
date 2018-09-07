@@ -31,4 +31,24 @@
         
             return $rows;
         }
+		
+		//Formata data
+		function formaterDate($filtroDate) {
+
+            $date = DateTime::createFromFormat('d/m/Y', $filtroDate);
+            $formatDate = $date->format('Y-m-d');
+
+            return $formatDate;
+        }
+
+		//Cria o filtro de data
+        function filterByDateCreateBetween($filtroDtInicio, $filtroDtFim) {
+
+            $filter = ["DateCreate" => array('$gte' => $this->formaterDate($filtroDtInicio))];
+            if($filtroDtFim) {            
+                $filter = ["DateCreate" => array('$gte' => $this->formaterDate($filtroDtInicio), '$lte' => $this->formaterDate($filtroDtFim) . " 23:59:59" )];
+            }    
+
+            return $filter;      
+        }
 ?>
