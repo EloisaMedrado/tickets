@@ -22,4 +22,13 @@
         public function __construct($db) {
             $this->mongo = $db;
         }
+		
+		// Retornando todos produtos
+        function findAll() {
+            $query = new MongoDB\Driver\Query([], ['sort' => [ 'CustomerName' => 1]]);
+            
+            $rows = $this->mongo->executeQuery("projeto.tickets", $query);
+        
+            return $rows;
+        }
 ?>
