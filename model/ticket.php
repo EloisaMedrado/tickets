@@ -32,6 +32,19 @@
             return $rows;
         }
 		
+		//Adiona ao sort a paginação
+		function pagination($sort, $pageSize, $page) {
+
+            //Trata com valores padrões
+            $page = is_null($page) ? 1 : $page;
+            $pageSize = is_null($pageSize) ? 10 : $pageSize;
+
+            $sort['skip'] = ($pageSize * $page) - $pageSize;
+            $sort['limit'] = $pageSize;
+
+            return $sort;       
+        }
+		
 		//Formata data
 		function formaterDate($filtroDate) {
 
