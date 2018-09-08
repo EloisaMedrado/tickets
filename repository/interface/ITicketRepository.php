@@ -6,7 +6,7 @@ interface ITicketRepository {
 
     function findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
 
-    function update(Ticket $ticket);
+    function update($ticket);
 
 }
 ?>
