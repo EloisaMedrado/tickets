@@ -57,5 +57,31 @@
 
             echo json_encode($tickets_arr);
         }
+		
+		function update($obj) {
+            
+            $data = json_decode($obj, true);
+
+            $mongo = Conexao::getInstance();
+            
+            $insere = !$data['_id'];
+
+            //Inicializando objeto com a conexão | setando propriedades
+            $ticket = new Ticket($mongo);
+            $ticket->id = $data['_id'];
+            $ticket->ticketID = $data['TicketID'];
+            $ticket->categoryID = $data['CategoryID'];
+            $ticket->customerID = $data['CustomerID'];
+            $ticket->customerName = $data['CustomerName'];
+            $ticket->customerEmail = $data['CustomerEmail'];
+            $ticket->dateCreate = $data['DateCreate'];
+            $ticket->dateUpdate = $data['DateUpdate'];
+            $ticket->priority = $data['Priority'];
+            $ticket->interactions = $data['Interactions'];
+
+            $retorno = $ticket->update();
+            return $retorno;
+            // return ($ticket->update($obj));
+        }
     }
 ?>
