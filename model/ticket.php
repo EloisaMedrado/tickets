@@ -1,116 +1,115 @@
 <?php
     class Ticket {
     
-        // Conexão com banco
-        private $mongo;
-        //Nome da tabela
-        private $bd_table_name = "projeto.tickets";
-    
-        // Propriedades
-        public $id;
-        public $ticketID;
-        public $categoryID;
-        public $customerID;
-        public $customerName;
-        public $customerEmail;
-        public $dateCreate;
-        public $dateUpdate;
-        public $priority;
-        public $interactions;
-    
-        // Construtor com a conexão
-        public function __construct($db) {
-            $this->mongo = $db;
-        }
-		
-		// Retornando todos produtos
-        function findAll() {
-            $query = new MongoDB\Driver\Query([], ['sort' => [ 'CustomerName' => 1]]);
-            
-            $rows = $this->mongo->executeQuery("projeto.tickets", $query);
+        private $id;
+        private $ticketID;
+        private $categoryID;
+        private $customerID;
+        private $customerName;
+        private $customerEmail;
+        private $dateCreate;
+        private $dateUpdate;
+        private $priority;
+        private $interactions;
         
-            return $rows;
-        }
-		
-		//Adiona ao sort a paginação
-		function pagination($sort, $pageSize, $page) {
-
-            //Trata com valores padrões
-            $page = is_null($page) ? 1 : $page;
-            $pageSize = is_null($pageSize) ? 10 : $pageSize;
-
-            $sort['skip'] = ($pageSize * $page) - $pageSize;
-            $sort['limit'] = $pageSize;
-
-            return $sort;       
-        }
-		
-		//Formata data
-		function formaterDate($filtroDate) {
-
-            $date = DateTime::createFromFormat('d/m/Y', $filtroDate);
-            $formatDate = $date->format('Y-m-d');
-
-            return $formatDate;
+        public function getId() {
+                return $this->id;
         }
 
-		//Cria o filtro de data
-        function filterByDateCreateBetween($filtroDtInicio, $filtroDtFim) {
+        public function setId($id) {
+                $this->id = $id;
 
-            $filter = ["DateCreate" => array('$gte' => $this->formaterDate($filtroDtInicio))];
-            if($filtroDtFim) {            
-                $filter = ["DateCreate" => array('$gte' => $this->formaterDate($filtroDtInicio), '$lte' => $this->formaterDate($filtroDtFim) . " 23:59:59" )];
-            }    
-
-            return $filter;      
+                return $this;
         }
-		
-		//Realiza consulta com filtros, ordem e paginação
-		function findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
 
-            $sort = ['sort' => [ "DateCreate" => 1]];
-            if($order) {
-                $sort = ['sort' => [ "$order" => 1]];
-            }
-
-            $sort = $this->pagination($sort, $pageSize, $page);
-            
-            $filter = array();
-            if($filterStartDt) {
-                $filter = $this->filterByDateCreateBetween($filterStartDt, $filterEndDt);
-            }
-            if($filterPriority){
-                $filter['Priority'] = $filterPriority;
-            }          
-
-            $query = new MongoDB\Driver\Query($filter, $sort);
-            $rows = $this->mongo->executeQuery("projeto.tickets", $query);
-
-            return $rows;
+        public function getTicketID() {
+                return $this->ticketID;
         }
-		
-		function update() {
 
-            $bulk = new MongoDB\Driver\BulkWrite;
-            $filter = ["_id" => new MongoDB\BSON\ObjectId("$this->id")];
+        public function setTicketID($ticketID) {
+                $this->ticketID = $ticketID;
 
-            $ticket_update = array(
-                "TicketID" => htmlspecialchars(strip_tags($this->ticketID)),
-                "CategoryID" => htmlspecialchars(strip_tags($this->categoryID)),
-                "CustomerID" => htmlspecialchars(strip_tags($this->customerID)),
-                "CustomerName" => htmlspecialchars(strip_tags($this->customerName)),
-                "CustomerEmail" => htmlspecialchars(strip_tags($this->customerEmail)),
-                "DateCreate" => $this->dateCreate,
-                "DateUpdate" => $this->dateUpdate,
-                "Priority" => $this->priority,
-                "Interactions" => $this->interactions
-            );
-
-            $bulk->update($filter, $ticket_update, ['multi' => false, 'upsert' => true]);
-            $returnMongo = $this->mongo->executeBulkWrite("projeto.tickets", $bulk);
-
-            // print_r($returnMongo->getModifiedCount());
-            return ($returnMongo->getModifiedCount());
+                return $this;
         }
-	}
+
+        public function getCategoryID() {
+                return $this->categoryID;
+        }
+
+        public function setCategoryID($categoryID) {
+                $this->categoryID = $categoryID;
+
+                return $this;
+        }
+
+        public function getCustomerID() {
+                return $this->customerID;
+        }
+
+        public function setCustomerID($customerID) {
+                $this->customerID = $customerID;
+
+                return $this;
+        }
+
+        public function getCustomerName() {
+                return $this->customerName;
+        }
+
+        public function setCustomerName($customerName) {
+                $this->customerName = $customerName;
+
+                return $this;
+        }
+
+        public function getCustomerEmail() {
+                return $this->customerEmail;
+        }
+
+        public function setCustomerEmail($customerEmail) {
+                $this->customerEmail = $customerEmail;
+
+                return $this;
+        }
+
+        public function getDateCreate() {
+                return $this->dateCreate;
+        }
+
+        public function setDateCreate($dateCreate) {
+                $this->dateCreate = $dateCreate;
+
+                return $this;
+        }
+
+        public function getDateUpdate() {
+                return $this->dateUpdate;
+        }
+
+        public function setDateUpdate($dateUpdate) {
+                $this->dateUpdate = $dateUpdate;
+
+                return $this;
+        }
+
+        public function getPriority() {
+                return $this->priority;
+        }
+
+        public function setPriority($priority) {
+                $this->priority = $priority;
+
+                return $this;
+        }
+
+        public function getInteractions() {
+                return $this->interactions;
+        }
+
+        public function setInteractions($interactions) {
+                $this->interactions = $interactions;
+
+                return $this;
+        }
+    }
 ?>

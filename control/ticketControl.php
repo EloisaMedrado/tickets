@@ -2,43 +2,53 @@
     // Includes like imports
     include_once '../model/ticket.php';
     include_once '../conexao/conexao.php';
+    include_once '../repository/TicketRepository.php';
+    include_once '../utils/TicketUtils.php';
 
     class TicketControl {
-		
-		private function getTicketsArray($rows) {
-            $tickets_arr = array();
-            foreach ($rows as $row) {
-                $ticket_item = array(
-                    "id" => $row->_id,
-                    "ticketID" => $row->TicketID,
-                    "categoryID" => $row->CategoryID,
-                    "customerID" => $row->CustomerID,
-                    "customerName" => html_entity_decode($row->CustomerName),
-                    "customerEmail" => html_entity_decode($row->CustomerEmail),
-                    "dateCreate" => $row->DateCreate,
-                    "dateUpdate" => $row->DateUpdate,
-                    "priority" => $row->Priority,
-                    "interactions" => $row->Interactions
-                );
-                array_push($tickets_arr, $ticket_item);
-            }
-            return $tickets_arr;
+
+        private $mongo;
+
+        public function __construct() {
+            $this->mongo = Conexao::getInstance();
         }
-		
-		function findByAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
 
-            $mongo = Conexao::getInstance();
-            $ticket = new Ticket($mongo);
+        function update($obj) {
+            
+            $data = json_decode($obj, true);
 
-            $rows = $ticket->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
+            $insere = !$data['_id']; //verificar como vai usar
 
-            //Array tickets
-            $tickets_arr = $this->getTicketsArray($rows);
+            $ticketRepository = new TicketRepository($this->mongo);
+
+            $ticket = TicketUtils::getNewTicketObject($data);
+            
+            $retorno = $ticketRepository->update($ticket);
+            return $retorno;
+        }
+
+        function findByAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
+
+            $ticketRepository = new TicketRepository($this->mongo);
+
+            $rows = $ticketRepository->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
+            
+            
+            
+            $tickets_arr = TicketUtils::getTicketsArray($rows);
+
+            $quantidadeRegistros = count($tickets_arr);
+            $pageSize =  is_null($pageSize) ? 3 : $pageSize;
+            $divisao = $quantidadeRegistros / $pageSize;
+            echo $quantidadeRegistros . ' - ' . $pageSize . ' - ' . $divisao;
+            $qtPages = ceil($divisao);
+            echo $qtPages; die();
+
 
             //Retorna resultados da pag 1
             if(!$tickets_arr) {
-                $rows = $ticket->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, 1, 10);
-                $tickets_arr = $this->getTicketsArray($rows);
+                $rows = $ticketRepository->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, 1, 10);
+                $tickets_arr = TicketUtils::getTicketsArray($rows);
             }
 
             echo json_encode($tickets_arr);
@@ -46,42 +56,14 @@
 
         function findAll() {
 
-            $mongo = Conexao::getInstance();
-            $ticket = new Ticket($mongo);
+            $ticketRepository = new TicketRepository($this->mongo);
 
-            //Executa query
-            $rows = $ticket->findAll();
+            $rows = $ticketRepository->findAll();
 
-            //Array tickets
-            $tickets_arr = $this->getTicketsArray($rows);
+
+            $tickets_arr = TicketUtils::getTicketsArray($rows);
 
             echo json_encode($tickets_arr);
-        }
-		
-		function update($obj) {
-            
-            $data = json_decode($obj, true);
-
-            $mongo = Conexao::getInstance();
-            
-            $insere = !$data['_id'];
-
-            //Inicializando objeto com a conexão | setando propriedades
-            $ticket = new Ticket($mongo);
-            $ticket->id = $data['_id'];
-            $ticket->ticketID = $data['TicketID'];
-            $ticket->categoryID = $data['CategoryID'];
-            $ticket->customerID = $data['CustomerID'];
-            $ticket->customerName = $data['CustomerName'];
-            $ticket->customerEmail = $data['CustomerEmail'];
-            $ticket->dateCreate = $data['DateCreate'];
-            $ticket->dateUpdate = $data['DateUpdate'];
-            $ticket->priority = $data['Priority'];
-            $ticket->interactions = $data['Interactions'];
-
-            $retorno = $ticket->update();
-            return $retorno;
-            // return ($ticket->update($obj));
         }
     }
 ?>
