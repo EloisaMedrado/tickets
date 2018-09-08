@@ -103,4 +103,27 @@ class TicketUtils {
         return $ticket_update;
     }
 
+    public static function getUrlPagination($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
+        
+        return "http://localhost:8000/view/findFilter.php?" .
+        "priority=" . $filterPriority .
+        "&startDt=" . $filterStartDt .
+        "&endDt=" . $filterEndDt .
+        "&order=" . $order .
+        "&pageSize=" . $pageSize .
+        "&page=" . $page;
+    }
+
+    public static function getArrayPages($page, $urlPage, $isCurrentPage) {
+        
+        $pages_arr = array();
+        $pages_arr['pages'] = array();
+
+        $page_arr = array(
+            "page" => $page,
+            "url" => $urlPage,
+            "currentPage" => $isCurrentPage
+        );
+        array_push($pages_arr['pages'], $page_arr);
+    }
 }
