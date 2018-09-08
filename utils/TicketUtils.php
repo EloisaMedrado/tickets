@@ -121,5 +121,8 @@ class TicketUtils {
             "currentPage" => $isCurrentPage
         );
         array_push($pages_arr['pages'], $page_arr);
+		
+		return $pages_arr;
     }
 }
+?>
