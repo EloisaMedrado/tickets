@@ -10,13 +10,13 @@
     include_once '../control/ticketControl.php';
 
     $priority =  $_GET['priority'];
-    $dtInicio =  $_GET['startDt'];
-    $dtFim =  $_GET['endDt'];
+    $startDt =  $_GET['startDt'];
+    $endDt =  $_GET['endDt'];
     $order =  $_GET['order'];
-    $page =  $_GET['page'];
-    $pageSize =  $_GET['pageSize'];
+    $page = isset($_GET['page']) ? $_GET['page'] : 1; // $_GET['page'];
+    $pageSize =  isset($_GET['pageSize']) ? $_GET['pageSize'] : 10; //$_GET['pageSize'];
 
     $ticketControl = new TicketControl();
-    $ticketControl->findByAndOrder($priority, $startDt, $endDt, $order, $page, $pageSize);
+    $ticketControl->findByAndOrderPaginationObject($priority, $startDt, $endDt, $order, $page, $pageSize);
 
 ?>
