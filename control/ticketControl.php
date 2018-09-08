@@ -32,6 +32,7 @@
             $paging = array();
             $pages_arr = array();
             $paging['paging'] = array();
+            $pages_arr['pages'] = array();
 
             $ticketRepository = new TicketRepository($this->mongo);
             $qtTotalRows = $ticketRepository->countByDateCreateBetweenAndPriority($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
@@ -46,9 +47,10 @@
                 if($i == $qtTotalPages) {
                     $paging['paging']['last'] = $urlPage;
                 } else {
-                    $pages_arr = TicketUtils::getArrayPages($i, $urlPage, $i == $page);
+                    array_push($pages_arr['pages'], TicketUtils::getArrayPages($i, $urlPage, $i == $page));
                 }
             }
+
             $paging['paging']['pages'] = $pages_arr['pages'];
 
             echo json_encode($paging);

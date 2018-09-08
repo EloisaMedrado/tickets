@@ -112,17 +112,13 @@ class TicketUtils {
 
     public static function getArrayPages($page, $urlPage, $isCurrentPage) {
         
-        $pages_arr = array();
-        $pages_arr['pages'] = array();
-
-        $page_arr = array(
+        $pages_arr = array(
             "page" => $page,
             "url" => $urlPage,
             "currentPage" => $isCurrentPage
         );
-        array_push($pages_arr['pages'], $page_arr);
-		
-		return $pages_arr;
+        
+        return $pages_arr;
     }
 }
 ?>
