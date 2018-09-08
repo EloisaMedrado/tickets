@@ -88,4 +88,28 @@
 
             return $rows;
         }
+		
+		function update() {
+
+            $bulk = new MongoDB\Driver\BulkWrite;
+            $filter = ["_id" => new MongoDB\BSON\ObjectId("$this->id")];
+
+            $ticket_update = array(
+                "TicketID" => htmlspecialchars(strip_tags($this->ticketID)),
+                "CategoryID" => htmlspecialchars(strip_tags($this->categoryID)),
+                "CustomerID" => htmlspecialchars(strip_tags($this->customerID)),
+                "CustomerName" => htmlspecialchars(strip_tags($this->customerName)),
+                "CustomerEmail" => htmlspecialchars(strip_tags($this->customerEmail)),
+                "DateCreate" => $this->dateCreate,
+                "DateUpdate" => $this->dateUpdate,
+                "Priority" => $this->priority,
+                "Interactions" => $this->interactions
+            );
+
+            $bulk->update($filter, $ticket_update, ['multi' => false, 'upsert' => true]);
+            $returnMongo = $this->mongo->executeBulkWrite("projeto.tickets", $bulk);
+
+            // print_r($returnMongo->getModifiedCount());
+            return ($returnMongo->getModifiedCount());
+        }
 ?>
