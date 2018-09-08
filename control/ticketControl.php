@@ -53,7 +53,7 @@
             $rows = $ticket->findAll();
 
             //Array tickets
-            $tickets_arr = this->getTicketsArray($rows);
+            $tickets_arr = $this->getTicketsArray($rows);
 
             echo json_encode($tickets_arr);
         }
