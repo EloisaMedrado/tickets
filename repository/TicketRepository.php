@@ -21,6 +21,18 @@ class TicketRepository implements ITicketRepository {
         return $rows;
     }
 
+    function countByDateCreateBetweenAndPriority($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
+        
+        $filter = TicketUtils::getFilter($filterStartDt, $filterEndDt, $filterPriority);
+
+        $Command = new MongoDB\Driver\Command(['count' => "tickets", 'query' => $filter]);
+        $Result = $this->mongo->executeCommand("projeto", $Command);
+        
+        // echo $Result->toArray()[0]->n;
+
+        return $Result->toArray()[0]->n;
+    }
+
     function findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
 
         $sort = TicketUtils::getSort($pageSize, $page, $order);
