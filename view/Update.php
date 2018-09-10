@@ -13,6 +13,6 @@
     $data = file_get_contents("php://input");
 
     $ticketControl = new TicketControl();
-    return $ticketControl->update($data);
+    echo $ticketControl->update($data);
     
 ?>
