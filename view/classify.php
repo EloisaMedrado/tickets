@@ -7,9 +7,9 @@
     header('Content-Type: application/json');
 
     // Includes like imports
-    include_once '../control/ticketControl.php';
+    include_once '../control/TicketControl.php';
 
     $ticketControl = new TicketControl();
-    $ticketControl->classifyDocs();
+    return $ticketControl->classifyDocs();
 
 ?>

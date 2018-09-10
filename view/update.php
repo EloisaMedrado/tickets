@@ -7,13 +7,12 @@
     header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
     // Includes like imports
-    include_once '../control/ticketControl.php';
+    include_once '../control/TicketControl.php';
 
     //Pega data do POST
     $data = file_get_contents("php://input");
 
     $ticketControl = new TicketControl();
-    $ticketControl->update($data);
-
-    // return ($ticket->update($obj));
+    return $ticketControl->update($data);
+    
 ?>
