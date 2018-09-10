@@ -7,10 +7,18 @@
     class ClassificationUtils {
 
         public static function isHighPriority($ticket) {
-            return $ticket['interactions'][$qtInteractions]['ClassificationScore'] >= LIMIAR;
+            
+            $highestScore = 0;
+            foreach ($ticket["interactions"] as $interaction) {
+                if($interaction['ClassificationScore'] > $highestScore) {
+                    $highestScore = $interaction['ClassificationScore'];
+                }
+            }
+            return $highestScore >= LIMIAR;
         }
 
         public static function getExpressionAndWeight() {
+
             return Array(
                 "/\?/iU" => 2,
                 "/reclama../iU" => 30,
