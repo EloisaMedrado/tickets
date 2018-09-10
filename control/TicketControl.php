@@ -90,7 +90,7 @@
             }
 
             foreach($filteredTickets as $ticket) {
-                $newTicket = Classification::classifyInteractions($ticket);
+                $newTicket = Classification::classifyTickets($ticket);
                 $successfullyClassified = $successfullyClassified && $this->update($newTicket);
             }
 
