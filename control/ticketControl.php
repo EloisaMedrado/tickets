@@ -4,6 +4,7 @@
     include_once '../conexao/conexao.php';
     include_once '../repository/TicketRepository.php';
     include_once '../utils/TicketUtils.php';
+    include_once 'Classification.php';
 
     class TicketControl {
 
@@ -13,18 +14,16 @@
             $this->mongo = Conexao::getInstance();
         }
 
-        function update($obj) {
-            
-            $data = json_decode($obj, true);
-
-            $insere = !$data['_id']; //verificar como vai usar
+        function update($ticket) {
 
             $ticketRepository = new TicketRepository($this->mongo);
-
-            $ticket = TicketUtils::getNewTicketObject($data);
+            if(!is_array($ticket)){
+                $data = json_decode($ticket, true);
+                $insere = !$data['_id']; //verificar como vai usar
+                $ticket = TicketUtils::getNewTicketObject($data);
+            }
             
-            $retorno = $ticketRepository->update($ticket);
-            return $retorno;
+            return $ticketRepository->update($ticket);
         }
 
         function findByAndOrderPaginationObject($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
@@ -50,10 +49,8 @@
                     array_push($pages_arr['pages'], TicketUtils::getArrayPages($i, $urlPage, $i == $page));
                 }
             }
-
             $paging['paging']['pages'] = $pages_arr['pages'];
 
-            echo json_encode($paging);
             return json_encode($paging);
         }
 
@@ -64,7 +61,6 @@
             $rows = $ticketRepository->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
             $tickets_arr = TicketUtils::getTicketsArray($rows);
 
-            // echo json_encode($tickets_arr);
             return $tickets_arr;
         }
 
@@ -73,11 +69,24 @@
             $ticketRepository = new TicketRepository($this->mongo);
 
             $rows = $ticketRepository->findAll();
+            $ticketsArray = TicketUtils::getTicketsArray($rows);
 
+            return json_encode($ticketsArray);
+        }
 
-            $tickets_arr = TicketUtils::getTicketsArray($rows);
+        function classifyDocs() {
 
-            echo json_encode($tickets_arr);
+            $successfullyClassified = true;
+            $ticketsArray = json_decode($this->findAll(), true);
+            $filteredTickets = TicketUtils::filterIfLastInteractionClassified($ticketsArray);
+
+            foreach($filteredTickets as &$ticket) {
+                echo "ecndh0";
+                $newTicket = Classification::classifyTickets($ticket);
+                $successfullyClassified = $successfullyClassified && $this->update($newTicket);
+            }
+
+            echo $successfullyClassified;
         }
     }
 ?>
