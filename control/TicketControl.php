@@ -17,16 +17,15 @@
         function update($ticket) {
 
             $ticketRepository = new TicketRepository($this->mongo);
-            if(!is_array($ticket)){
+            if(!is_array($ticket)) {
                 $data = json_decode($ticket, true);
-                $insere = !$data['_id']; //verificar como vai usar
                 $ticket = TicketUtils::getNewTicketObject($data);
             }
             
             return $ticketRepository->update($ticket);
         }
 
-        function findByAndOrderPaginationObject($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
+        function findByAndOrderPaginationObject($filterPriority, $filterStartDt, $filterEndDt, $order, $ascendingOrder, $page, $pageSize) {
 
             $paging = array();
             $pages_arr = array();
@@ -34,14 +33,14 @@
             $pages_arr['pages'] = array();
 
             $ticketRepository = new TicketRepository($this->mongo);
-            $qtTotalRows = $ticketRepository->countByDateCreateBetweenAndPriority($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
+            $qtTotalRows = $ticketRepository->countByDateCreateBetweenAndPriority($filterPriority, $filterStartDt, $filterEndDt);
             $qtTotalPages = ceil($qtTotalRows/$pageSize);  
             
             for ($i = 1; $i <= $qtTotalPages; $i++) {
                 if($i == $page){
-                    $paging['tickets'] = $this->findByAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
+                    $paging['tickets'] = $this->findByAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $ascendingOrder, $page, $pageSize);
                 }
-                $urlPage = TicketUtils::getUrlPagination($filterPriority, $filterStartDt, $filterEndDt, $order, $i, $pageSize);
+                $urlPage = TicketUtils::getUrlPagination($filterPriority, $filterStartDt, $filterEndDt, $order, $ascendingOrder, $i, $pageSize);
 
                 if($i == $qtTotalPages) {
                     $paging['paging']['last'] = $urlPage;
@@ -52,15 +51,14 @@
             }
             $paging['paging']['pages'] = $pages_arr['pages'];
 
-            // echo json_encode($paging);
             return json_encode($paging);
         }
 
-        function findByAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
+        function findByAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $ascendingOrder, $page, $pageSize) {
 
             $ticketRepository = new TicketRepository($this->mongo);
 
-            $rows = $ticketRepository->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
+            $rows = $ticketRepository->findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $ascendingOrder, $page, $pageSize);
             $ticketsArray = TicketUtils::getTicketsArray($rows);
 
             return $ticketsArray;
@@ -73,7 +71,6 @@
             $rows = $ticketRepository->findAll();
             $ticketsArray = TicketUtils::getTicketsArray($rows);
 
-            // echo json_encode($ticketsArray);
             return json_encode($ticketsArray);
         }
 
@@ -94,7 +91,6 @@
                 $successfullyClassified = $successfullyClassified && $this->update($newTicket);
             }
 
-            // echo $successfullyClassified;
             return $successfullyClassified;
         }
     }

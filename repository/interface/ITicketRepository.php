@@ -1,14 +1,14 @@
 <?php
 
-interface ITicketRepository {
+    interface ITicketRepository {
 
-    function findAll();
-	
-	function countByDateCreateBetweenAndPriority($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
+        function findAll();
 
-    function findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize);
+        function countByDateCreateBetweenAndPriority($filterPriority, $filterStartDt, $filterEndDt);
 
-    function update($ticket);
+        function findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $ascendingOrder, $page, $pageSize);
 
-}
+        function update($ticket);
+
+    }
 ?>
