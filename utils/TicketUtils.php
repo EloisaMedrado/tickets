@@ -44,7 +44,7 @@ class TicketUtils {
             $filter = self::filterByDateCreateBetween($filterStartDt, $filterEndDt);
         }
         if($filterPriority){
-            $filter['Priority'] = $filterPriority;
+            $filter['Priority.Status'] = $filterPriority;
         }
         return $filter;
     }
@@ -99,6 +99,21 @@ class TicketUtils {
         return $ticket_update;
     }
 
+    public static function getNewTicketArrayFromArray($ticket) {
+        $ticket_update = array(
+            "TicketID" => htmlspecialchars(strip_tags($ticket['ticketID'])),
+            "CategoryID" => htmlspecialchars(strip_tags($ticket['categoryID'])),
+            "CustomerID" => htmlspecialchars(strip_tags($ticket['customerID'])),
+            "CustomerName" => htmlspecialchars(strip_tags($ticket['customerName'])),
+            "CustomerEmail" => htmlspecialchars(strip_tags($ticket['customerEmail'])),
+            "DateCreate" => $ticket['dateCreate'],
+            "DateUpdate" => $ticket['dateUpdate'],
+            "Priority" => $ticket['priority'],
+            "Interactions" => $ticket['interactions']
+        );
+        return $ticket_update;
+    }
+
     public static function getUrlPagination($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
         
         return "http://localhost:8000/view/findFilter.php?" .
@@ -119,6 +134,26 @@ class TicketUtils {
         );
         
         return $pages_arr;
+    }
+
+    public static function getLastInteractionCustomer($ticket) {
+
+        $lastInteraction = count($ticket['interactions']) - 1;
+        if($ticket['interactions'][$lastInteraction]['Sender'] == "Expert" && $lastInteraction > 0) {
+            $lastInteraction--;
+        }
+
+        return $lastInteraction;
+    }
+
+    public static function filterIfLastInteractionClassified($tickets_arr) {
+
+        $filteredTickets = array_filter($tickets_arr, function($ticket) {
+            $lastInteraction = self::getLastInteractionCustomer($ticket);
+            return !$ticket['interactions'][$lastInteraction]['ClassificationScore'];
+        });
+        
+        return $filteredTickets;
     }
 }
 ?>
