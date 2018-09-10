@@ -14,8 +14,8 @@ class TicketRepository implements ITicketRepository {
     }
 
     function findAll() {
+
         $query = new MongoDB\Driver\Query([], ['sort' => [ 'CustomerName' => 1]]);
-        
         $rows = $this->mongo->executeQuery($this->bdTableName, $query);
 
         return $rows;
@@ -27,8 +27,6 @@ class TicketRepository implements ITicketRepository {
 
         $Command = new MongoDB\Driver\Command(['count' => "tickets", 'query' => $filter]);
         $Result = $this->mongo->executeCommand("projeto", $Command);
-        
-        // echo $Result->toArray()[0]->n;
 
         return $Result->toArray()[0]->n;
     }
@@ -36,7 +34,6 @@ class TicketRepository implements ITicketRepository {
     function findByDateCreateBetweenAndPriorityAndOrder($filterPriority, $filterStartDt, $filterEndDt, $order, $page, $pageSize) {
 
         $sort = TicketUtils::getSort($pageSize, $page, $order);
-        
         $filter = TicketUtils::getFilter($filterStartDt, $filterEndDt, $filterPriority);
 
         $query = new MongoDB\Driver\Query($filter, $sort);
@@ -48,15 +45,20 @@ class TicketRepository implements ITicketRepository {
     function update($ticket) {
 
         $bulk = new MongoDB\Driver\BulkWrite;
-        $id = $ticket->getId();
-        $filter = ["_id" => new MongoDB\BSON\ObjectId("$id")];
+        if(!is_array($ticket)) {
+            $id = $ticket->getId();
+            var_dump($ticket); die();
+            $ticket_update = TicketUtils::getNewTicketArray($ticket);
+        } else {
+            $id = (string) new MongoDB\BSON\ObjectId($ticket['id']['$oid']);
+            $ticket_update = TicketUtils::getNewTicketArrayFromArray($ticket);
+        }
 
-        $ticket_update = TicketUtils::getNewTicketArray($ticket);
+        $filter = ["_id" => new MongoDB\BSON\ObjectId("$id")];
 
         $bulk->update($filter, $ticket_update, ['multi' => false, 'upsert' => true]);
         $returnMongo = $this->mongo->executeBulkWrite($this->bdTableName, $bulk);
 
-        // print_r($returnMongo->getModifiedCount());
         return ($returnMongo->getModifiedCount());
     }
 
