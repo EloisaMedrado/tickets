@@ -10,6 +10,6 @@
     include_once '../control/ticketControl.php';
 
     $ticketControl = new TicketControl();
-    $ticketControl->findAll();
+    return $ticketControl->findAll();
 
 ?>

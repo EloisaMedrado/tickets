@@ -17,6 +17,6 @@
     $pageSize =  isset($_GET['pageSize']) ? $_GET['pageSize'] : 10; //$_GET['pageSize'];
 
     $ticketControl = new TicketControl();
-    $ticketControl->findByAndOrderPaginationObject($priority, $startDt, $endDt, $order, $page, $pageSize);
+    return $ticketControl->findByAndOrderPaginationObject($priority, $startDt, $endDt, $order, $page, $pageSize);
 
 ?>
