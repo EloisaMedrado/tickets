@@ -9,7 +9,9 @@
     // Includes like imports
     include_once '../control/TicketControl.php';
 
+    $dateNow = isset($_GET['dateNow']) ? $_GET['dateNow'] : "29/12/2017";
+
     $ticketControl = new TicketControl();
-    echo $ticketControl->classifyDocs();
+    echo $ticketControl->classifyDocs($dateNow);
 
 ?>

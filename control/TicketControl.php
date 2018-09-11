@@ -70,7 +70,7 @@
             return json_encode($ticketsArray);
         }
 
-        function classifyDocs() {
+        function classifyDocs($dateNow) {
 
             $filteredTickets = null;
             $successfullyClassified = true;
@@ -79,7 +79,7 @@
             $filteredTickets = TicketUtils::filterIfLastInteractionClassified($ticketsArray);
 
             foreach($filteredTickets as $ticket) {
-                $newTicket = Classification::classifyTickets($ticket);
+                $newTicket = Classification::classifyTickets($ticket, $dateNow);
                 $successfullyClassified = $successfullyClassified && $this->update($newTicket);
             }
 

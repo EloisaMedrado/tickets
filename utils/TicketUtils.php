@@ -12,7 +12,7 @@
             return $sort;       
         }
 
-        private static function formaterDate($filtroDate) {
+        public static function formaterDate($filtroDate) {
 
             $date = DateTime::createFromFormat('d/m/Y', $filtroDate);
             $formatDate = $date->format('Y-m-d');

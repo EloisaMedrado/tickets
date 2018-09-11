@@ -5,11 +5,12 @@
     
     class Classification {
 
-        public static function classifyTickets($ticket) {
+        public static function classifyTickets($ticket, $dateNow) {
 
             $priorityArray = array();
+            $dateNowFormat = TicketUtils::formaterDate($dateNow);
 
-            $newTicket = self::classifyInteractions($ticket);
+            $newTicket = self::classifyInteractions($ticket, $dateNowFormat);
             $lastInteraction = TicketUtils::getLastInteractionCustomer($newTicket);      
 
             if(ClassificationUtils::isHighPriority($newTicket)) {
@@ -24,19 +25,20 @@
             return $newTicket;
         }
 
-        private static function classifyInteractions($ticket) {
+        private static function classifyInteractions($ticket, $dateNow) {
 
             $classificationScore = 0;
+
             //Em caso real receberia a dataTimeNow
-            $datetimeNow = new DateTime("2017-12-28");
+            $dateTimeNow = new DateTime($dateNow);
             $interactionWithoutAnswer = count($ticket["interactions"]) % 2;
 
             if($interactionWithoutAnswer) {
                 $lastInteraction = TicketUtils::getLastInteractionCustomer($ticket);
                 $dateCreateInteraction = new DateTime($ticket['interactions'][$lastInteraction]["DateCreate"]);
                 //Em caso real esse if não seria necessário
-                if($datetimeNow > $dateCreateInteraction) {
-                    $interval = $dateCreateInteraction->diff($datetimeNow);
+                if($dateTimeNow > $dateCreateInteraction) {
+                    $interval = $dateCreateInteraction->diff($dateTimeNow);
                     $classificationScore = ($interval->format('%a')) * WEIGHT_SCORE_DAY;
                 }
             }
