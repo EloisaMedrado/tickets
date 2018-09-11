@@ -29,11 +29,12 @@ Crie seu banco de dados e sua collection e informe os detalhes no arquivo Config
 
 ```
 define('DB_NAME', 'nomeDoBanco');
-define('DB_HOST', 'hostDoBanco')
-define('DB_PORT', 'portaDoBanco')
-define('DB_PASS', 'senhaDoBanco')
-define('DB_USER', 'usuarioDoBanco')
-define('DB_COLLECTION', 'collectionDoBanco')
+define('DB_HOST', 'hostDoBanco');
+define('DB_PORT', 'portaDoBanco');
+define('DB_PASS', 'senhaDoBanco');
+define('DB_USER', 'usuarioDoBanco');
+define('DB_COLLECTION', 'collectionDoBanco');
+define('URL_PROJECT', 'http://localhost:8000');
 ```
 ## Deploy
 
