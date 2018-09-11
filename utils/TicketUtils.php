@@ -124,7 +124,7 @@
 
         public static function getUrlPagination($filterPriority, $filterStartDt, $filterEndDt, $order, $ascendingOrder, $page, $pageSize) {
             
-            return URL_PROJECT . "/view/findFilter.php?" .
+            return URL_PROJECT . "/view/FindFilter.php?" .
             "priority=" . $filterPriority .
             "&startDt=" . $filterStartDt .
             "&endDt=" . $filterEndDt .

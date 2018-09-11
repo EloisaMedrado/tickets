@@ -26,9 +26,24 @@
 
         private static function classifyInteractions($ticket) {
 
+            $classificationScore = 0;
+            //Em caso real receberia a dataTimeNow
+            $datetimeNow = new DateTime("2017-12-28");
+            $interactionWithoutAnswer = count($ticket["interactions"]) % 2;
+
+            if($interactionWithoutAnswer) {
+                $lastInteraction = TicketUtils::getLastInteractionCustomer($ticket);
+                $dateCreateInteraction = new DateTime($ticket['interactions'][$lastInteraction]["DateCreate"]);
+                //Em caso real esse if não seria necessário
+                if($datetimeNow > $dateCreateInteraction) {
+                    $interval = $dateCreateInteraction->diff($datetimeNow);
+                    $classificationScore = ($interval->format('%a')) * WEIGHT_SCORE_DAY;
+                }
+            }
+
             foreach ($ticket["interactions"] as &$interaction) {
                 if($interaction['Sender'] == "Customer" && !$interaction["ClassificationScore"]){
-                    $classificationScore = self::classifyInteraction($interaction['Subject'] . $interaction['Message']);
+                    $classificationScore = self::classifyInteraction($interaction['Subject'] . $interaction['Message'], $classificationScore);
                     $interaction["ClassificationScore"] = $classificationScore;
                 }
             }
@@ -36,9 +51,8 @@
             return $ticket;
         }
 
-        private static function classifyInteraction($text) {
+        private static function classifyInteraction($text, $classificationScore) {
 
-            $classificationScore = 0;
             foreach(ClassificationUtils::getExpressionAndWeight() as $key => $value) {
                 preg_match($key, $text, $matches);
                 if($matches) {
@@ -46,7 +60,7 @@
                 }
             }
 
-            return $classificationScore;
+            return ($classificationScore <= MAX) ? $classificationScore : MAX;
         }
     }
 ?>

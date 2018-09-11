@@ -1,8 +1,10 @@
 <?php
 
     define('LIMIAR',70);
+    define('MAX', 100);
     define('ALTA',"Alta");
     define('NORMAL',"Normal");
+    define('WEIGHT_SCORE_DAY', 2);
 
     class ClassificationUtils {
 
