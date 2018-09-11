@@ -7,7 +7,7 @@ Projeto para exibicação de tickets de atendimento com a opção de classifica�
 Os itens a seguir são necessários para rodar essa aplicação
 
 ```
-PHP ou XAMPP
+PHP
 Driver MongoDB para o PHP
 MongoDB
 
@@ -18,13 +18,37 @@ MongoDB
 Faça um clone desse repositório e execute os seguintes passos/comandos.
 
 ```
-1) Inicie o servidor do MongoDB
+1) Instale o PHP 7
 ```
-Neste caso utilizei a imagem do MongoDB do Docker. Para instalar no Linux basta rodar os comandos:
-	sudo apt install docker.io
-	sudo docker run --net=host --name elo-mongo -d mongo
-O banco subirá localhost na porta 27017.
+Linux
+	sudo apt install php7.0-dev
+	sudo apt-get install php-pear
+Windows
+	[Download PHP 7](https://windows.php.net/download/) *versão utilizada para teste php-7.0.31-Win32-VC14-x64.zip
+
+```
+2) Instale o driver do MongoDB no PHP
+```
+Linux
+	sudo pecl install mongodb
+	Adicionar 'extension=mongodb.so' ao arquivo php.ini
+Windows
+	[Download Driver](https://windows.php.net/downloads/pecl/releases/mongodb/1.5.2/) *versão utilizada para teste php_mongodb-1.5.2-7.0-ts-vc14-x64
+	Extraia o arquivo e coloque a dll em 'LocalInstalacaoPhp\ext\' ex : 'C:\php\ext\php_mongodb.dll'
+	Adicionar 'extension=php_mongodb.dll' ao arquivo php.ini
 	
+```
+3) Instale e inicie o servidor do MongoDB
+```
+Linux
+	Neste caso utilizei a imagem do MongoDB do Docker. É preciso instalar o Docker e rodar a imagem do MongoDB.
+		sudo apt install docker.io
+		sudo docker run --net=host --name elo-mongo -d mongo
+	O banco subirá localhost na porta 27017.
+Windows
+	[Download Mongo](https://www.mongodb.com/download-center?jmp=nav#atlas)
+	[Siga tutorial de configuração](https://pplware.sapo.pt/tutoriais/mongodb-instalar-e-configurar-a-bd-nosql-no-windows-10/)
+
 Crie seu banco de dados e sua collection e informe os detalhes no arquivo Config.php
 
 ```
@@ -42,7 +66,6 @@ Agora você pode rodar o seguinte comando para iniciar a aplicação.
 ```
 Se for utilizar o PHP para subir o servidor, acesse a pasta do projeto e execute:
  1.1) php -S endereço/porta, por exemeplo: php -S 0.0.0.0:8000
-Se for utilizar o XAMPP inicie o servidor
 ```
 
 ## API
@@ -105,7 +128,7 @@ http://endereço/view/FindFilter.php - listagem de todos os tickets filtrados ca
 		&ascendingOrder=1 - Será feita a ordenação crescente de todos os tickets de acordo com o order. Opções disponíveis: 1 e -1 (crescente e decrescente respectivamente). Default: 1 (Crescente)
 		&pageSize=10 - Será feito a consulta dos tickets e retornará os 10 registros da consulta. Default=10
 		&page=1 - Será feita a consulta dos tickets e retornará os tickets na página 1. A quantidade de valores retornados depende do $pageSize e a quantidade de páginas depende do total de registro e do $pageSize.
-http://endereço/view/Classify.php - Sera feita a classificação dos tickets existentes no banco. A classificação gerada pode ser vista acessando a rota FindAll.php
+http://endereço/view/Classify.php?dateNow=29/12/2017 - Sera feita a classificação dos tickets existentes no banco. A classificação leva em conta tempo de resposta, por isso o parametro de data atual. Em cenário real esse parametro não seria necessário pegando sempre a data atual real. A classificação gerada pode ser vista acessando a rota FindAll.php
 ```
 
 
