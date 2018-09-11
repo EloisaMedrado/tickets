@@ -17,11 +17,7 @@
         function update($ticket) {
 
             $ticketRepository = new TicketRepository($this->mongo);
-            if(!is_array($ticket)) {
-                $data = json_decode($ticket, true);
-                $ticket = TicketUtils::getNewTicketObject($data);
-            }
-            
+
             return $ticketRepository->update($ticket);
         }
 
@@ -74,17 +70,13 @@
             return json_encode($ticketsArray);
         }
 
-        function classifyDocs($ticketToClassify = null) {
+        function classifyDocs() {
 
             $filteredTickets = null;
             $successfullyClassified = true;
 
-            if(is_null($ticketToClassify)){
-                $ticketsArray = json_decode($this->findAll(), true);
-                $filteredTickets = TicketUtils::filterIfLastInteractionClassified($ticketsArray);
-            } else {
-                $filteredTickets = array(json_decode($ticketToClassify, true));
-            }
+            $ticketsArray = json_decode($this->findAll(), true);
+            $filteredTickets = TicketUtils::filterIfLastInteractionClassified($ticketsArray);
 
             foreach($filteredTickets as $ticket) {
                 $newTicket = Classification::classifyTickets($ticket);

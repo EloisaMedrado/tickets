@@ -74,38 +74,6 @@
             return $tickets_arr;
         }
 
-        public static function getNewTicketObject($data) {
-            
-            $ticket = new Ticket();
-            $ticket->setId($data['_id']);
-            $ticket->setTicketID($data['TicketID']);
-            $ticket->setCategoryID($data['CategoryID']);
-            $ticket->setCustomerID($data['CustomerID']);
-            $ticket->setCustomerName($data['CustomerName']);
-            $ticket->setCustomerEmail($data['CustomerEmail']);
-            $ticket->setDateCreate($data['DateCreate']);
-            $ticket->setDateUpdate($data['DateUpdate']);
-            $ticket->setPriority($data['Priority']);
-            $ticket->setInteractions($data['Interactions']);
-            return $ticket;
-        }
-
-        public static function getNewTicketArray($ticket) {
-            
-            $ticket_update = array(
-                "TicketID" => htmlspecialchars(strip_tags($ticket->getTicketID())),
-                "CategoryID" => htmlspecialchars(strip_tags($ticket->getCategoryID())),
-                "CustomerID" => htmlspecialchars(strip_tags($ticket->getCustomerID())),
-                "CustomerName" => htmlspecialchars(strip_tags($ticket->getCustomerName())),
-                "CustomerEmail" => htmlspecialchars(strip_tags($ticket->getCustomerEmail())),
-                "DateCreate" => $ticket->getDateCreate(),
-                "DateUpdate" => $ticket->getDateUpdate(),
-                "Priority" => $ticket->getPriority(),
-                "Interactions" => $ticket->getInteractions()
-            );
-            return $ticket_update;
-        }
-
         public static function getNewTicketArrayFromArray($ticket) {
             
             $ticket_update = array(
@@ -136,13 +104,13 @@
 
         public static function getArrayPages($page, $urlPage, $isCurrentPage) {
             
-            $pages_arr = array(
+            $pagesArray = array(
                 "page" => $page,
                 "url" => $urlPage,
                 "currentPage" => $isCurrentPage
             );
             
-            return $pages_arr;
+            return $pagesArray;
         }
 
         public static function getLastInteractionCustomer($ticket) {

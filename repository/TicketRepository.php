@@ -45,14 +45,10 @@
         function update($ticket) {
 
             $bulk = new MongoDB\Driver\BulkWrite;
-            if(!is_array($ticket)) {
-                $id = $ticket->getId();
-                $ticket_update = TicketUtils::getNewTicketArray($ticket);
-            } else {
-                $id = (string) new MongoDB\BSON\ObjectId($ticket['id']['$oid']);
-                $ticket_update = TicketUtils::getNewTicketArrayFromArray($ticket);
-            }
 
+            $id = (string) new MongoDB\BSON\ObjectId($ticket['id']['$oid']);
+            $ticket_update = TicketUtils::getNewTicketArrayFromArray($ticket);
+            
             $filter = ["_id" => new MongoDB\BSON\ObjectId("$id")];
 
             $bulk->update($filter, $ticket_update, ['multi' => false, 'upsert' => true]);
