@@ -28,9 +28,9 @@
         function findByAndOrderPaginationObject($filterPriority, $filterStartDt, $filterEndDt, $order, $ascendingOrder, $page, $pageSize) {
 
             $paging = array();
-            $pages_arr = array();
+            $pagesArray = array();
             $paging['paging'] = array();
-            $pages_arr['pages'] = array();
+            $pagesArray['pages'] = array();
 
             $ticketRepository = new TicketRepository($this->mongo);
             $qtTotalRows = $ticketRepository->countByDateCreateBetweenAndPriority($filterPriority, $filterStartDt, $filterEndDt);
@@ -46,10 +46,10 @@
                     $paging['paging']['last'] = $urlPage;
                     $paging['paging']['lastPage'] = $qtTotalPages;
                 } else {
-                    array_push($pages_arr['pages'], TicketUtils::getArrayPages($i, $urlPage, $i == $page));
+                    array_push($pagesArray['pages'], TicketUtils::getArrayPages($i, $urlPage, $i == $page));
                 }
             }
-            $paging['paging']['pages'] = $pages_arr['pages'];
+            $paging['paging']['pages'] = $pagesArray['pages'];
 
             return json_encode($paging);
         }
@@ -91,7 +91,10 @@
                 $successfullyClassified = $successfullyClassified && $this->update($newTicket);
             }
 
-            return $successfullyClassified;
+            if($successfullyClassified){
+                return "Tickets classificados com sucesso!";
+            }
+            return "Não foi possível classificar todos os tickets!";
         }
     }
 ?>
