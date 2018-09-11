@@ -19,16 +19,17 @@ Faça um clone desse repositório e execute os seguintes passos/comandos.
 
 ```
 1) Instale o PHP 7
-```
+
 Linux
 	sudo apt install php7.0-dev
 	sudo apt-get install php-pear
 Windows
 	[Download PHP 7](https://windows.php.net/download/) *versão utilizada para teste php-7.0.31-Win32-VC14-x64.zip
+```
 
 ```
 2) Instale o driver do MongoDB no PHP
-```
+
 Linux
 	sudo pecl install mongodb
 	Adicionar 'extension=mongodb.so' ao arquivo php.ini
@@ -36,10 +37,11 @@ Windows
 	[Download Driver](https://windows.php.net/downloads/pecl/releases/mongodb/1.5.2/) *versão utilizada para teste php_mongodb-1.5.2-7.0-ts-vc14-x64
 	Extraia o arquivo e coloque a dll em 'LocalInstalacaoPhp\ext\' ex : 'C:\php\ext\php_mongodb.dll'
 	Adicionar 'extension=php_mongodb.dll' ao arquivo php.ini
-	
+```
+
 ```
 3) Instale e inicie o servidor do MongoDB
-```
+
 Linux
 	Neste caso utilizei a imagem do MongoDB do Docker. É preciso instalar o Docker e rodar a imagem do MongoDB.
 		sudo apt install docker.io
@@ -48,6 +50,7 @@ Linux
 Windows
 	[Download Mongo](https://www.mongodb.com/download-center?jmp=nav#atlas)
 	[Siga tutorial de configuração](https://pplware.sapo.pt/tutoriais/mongodb-instalar-e-configurar-a-bd-nosql-no-windows-10/)
+```
 
 Crie seu banco de dados e sua collection e informe os detalhes no arquivo Config.php
 
