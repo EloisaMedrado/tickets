@@ -100,8 +100,8 @@ http://endereço/view/FindFilter.php - listagem de todos os tickets filtrados ca
 	Filtros disponíveis: 
 		&startDt=01/01/2017 - Sera feito o filtro por todos os tickets que tenham DateCreate >= 01/01/2017
 		&endDt=01/01/2018 - Somente fitrará quando passado startDt também. Trará os tickets que o DateCreate esteja entre &startDt e a data passada em &endDt
-		&priority=ALTA - Será feito o filtro por todos os tickets que estejam classificados com prioridade 'ALTA'. Opções disponíveis: 'ALTA' e 'NORMAL'
-		&order=DateCreate - Será feita a ordenação de todos os tickets se baseando no DateCreate. Opções disponíveis: TicketID, CategoryID, CustomerID, CustomerName, CustomerEmail, DateCreate e DateUpdate. Default: DateCreate
+		&priority=Alta - Será feito o filtro por todos os tickets que estejam classificados com prioridade 'Alta'. Opções disponíveis: 'Alta' e 'Normal'
+		&order=DateCreate - Será feita a ordenação de todos os tickets se baseando no DateCreate. Opções disponíveis: Priority.Status, TicketID, CategoryID, CustomerID, CustomerName, CustomerEmail, DateCreate e DateUpdate. Default: DateCreate
 		&ascendingOrder=1 - Será feita a ordenação crescente de todos os tickets de acordo com o order. Opções disponíveis: 1 e -1 (crescente e decrescente respectivamente). Default: 1 (Crescente)
 		&pageSize=10 - Será feito a consulta dos tickets e retornará os 10 registros da consulta. Default=10
 		&page=1 - Será feita a consulta dos tickets e retornará os tickets na página 1. A quantidade de valores retornados depende do $pageSize e a quantidade de páginas depende do total de registro e do $pageSize.
